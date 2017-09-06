@@ -1,3 +1,12 @@
+
+/*
+  Author   : Arthur A Garcia
+  Date     : Sept. 5, 2017
+  Hardware : MxChip version 1.0.2
+  Desc.    : This program will calculate direction using the on board Magnetometer
+
+*/
+
 #include "AZ3166WiFi.h"
 #include "Sensor.h"
 #include "SystemVersion.h"
