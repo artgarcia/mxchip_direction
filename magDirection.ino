@@ -12,7 +12,7 @@
 #include "SystemVersion.h"
 #include "http_client.h"
 #include "telemetry.h"
-#include <math_compat.h>
+
 
 
 DevI2C *ext_i2c;
@@ -22,6 +22,7 @@ char buff[128];
 int axes[3];
 static bool isConnected;
 float declination_offset_radians = 0;
+double M_PIE = 3.14159265358979323846;
 
 void InitWiFi()
 {
@@ -54,12 +55,12 @@ void SetDeclination(int declination_degs , char declination_dir )
     {
       // North and East are positive   
       case 'E': 
-        declination_offset_radians = declination_degs  * (M_PI / 180);
+        declination_offset_radians = declination_degs  * (M_PIE / 180);
         break;
         
       // South and West are negative    
       case 'W':
-        declination_offset_radians =  0 - ( declination_degs  * (M_PI / 180) ) ;
+        declination_offset_radians =  0 - ( declination_degs  * (M_PIE / 180) ) ;
         break;
     } 
 }
@@ -75,13 +76,13 @@ void showMagneticSensor()
  
   // Correct for when signs are reversed.
   if(heading < 0)
-     heading += 2*M_PI;
+     heading += 2*M_PIE;
  
    // Check for wrap due to addition of declination.
-   if(heading > 2*M_PI)
-     heading -= 2*M_PI;
+   if(heading > 2*M_PIE)
+     heading -= 2*M_PIE;
 
-  heading = heading * 180/M_PI;
+  heading = heading * 180/M_PIE;
   int deg = (int)heading;
 
   // display direction
