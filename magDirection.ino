@@ -4,6 +4,11 @@
   Date     : Sept. 5, 2017
   Hardware : MxChip version 1.0.2
   Desc.    : This program will calculate direction using the on board Magnetometer
+  
+  last Update: 12/05/2019
+
+  declination calcualtor
+  https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#declination
 
 */
 
@@ -13,8 +18,6 @@
 #include "http_client.h"
 #include "telemetry.h"
 
-
-
 DevI2C *ext_i2c;
 LIS2MDLSensor *magnetometer;
 char wifiBuff[128];
@@ -23,6 +26,8 @@ int axes[3];
 static bool isConnected;
 float declination_offset_radians = 0;
 double M_PIE = 3.14159265358979323846;
+int DEC_EW = 5;
+
 
 void InitWiFi()
 {
@@ -60,7 +65,7 @@ void SetDeclination(int declination_degs , char declination_dir )
         
       // South and West are negative    
       case 'W':
-        declination_offset_radians =  0 - ( declination_degs  * (M_PIE / 180) ) ;
+        declination_offset_radians =  0 - ( declination_degs  * (M_PIE/ 180) ) ;
         break;
     } 
 }
@@ -79,14 +84,14 @@ void showMagneticSensor()
      heading += 2*M_PIE;
  
    // Check for wrap due to addition of declination.
-   if(heading > 2*M_PIE)
-     heading -= 2*M_PIE;
+   if(heading > 2* M_PIE)
+     heading -= 2* M_PIE;
 
   heading = heading * 180/M_PIE;
   int deg = (int)heading;
 
   // display direction
-  snprintf(buff, 128, "Magnetometer \r\n x:%d   y:%d    z:%d \r\n heading : %d  ", axes[0], axes[1], axes[2], deg);
+  snprintf(buff, 128, "Magnetometer: \r\n x:%d   y:%d    z:%d \r\n heading : %d  ", axes[0], axes[1], axes[2], deg);
   Screen.print(buff);
  
 }
@@ -102,7 +107,7 @@ void setup()
   magnetometer->init(NULL);
 
   // set magnetic deviation
-  SetDeclination(2,'W');
+  SetDeclination(DEC_EW,'W');
   delay(1000);
   Screen.print(1,"End init",false);
   
